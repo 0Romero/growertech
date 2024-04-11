@@ -7,24 +7,17 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
-
 @Data
 @Entity
-public class Solo {
+public class Insumo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @NotBlank(message = "O Tipo do solo  é obrigatório")
-    private String tipo;
-    
-    @NotBlank(message = "a Cultura plantada é obrigatória por exemplo : Batata")
-    private String cultura; 
 
+    @NotBlank(message = "Nome do insumo é obrigatório")
+    private String nome;
 
-    public Solo( String tipo, String cultura) { 
-        
-        this.tipo = tipo;
-        this.cultura = cultura;
+    public Insumo(String  nome ) { 
+        this.nome = nome;
     }
 }

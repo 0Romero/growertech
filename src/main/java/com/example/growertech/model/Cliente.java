@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 
@@ -21,7 +22,8 @@ public class Cliente {
     @NotBlank(message = "O nome é obrigatório")
     private String nome;
     
-    @NotBlank(message = "O CPF é obrigatório")
+    @NotBlank(message = "cpf Obrigatorio")
+    @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}", message = "{account.cpf.Patern}")
     private String cpf;
     
     @Email(message = "O email deve ser válido")
