@@ -39,14 +39,29 @@ public class Recomendacao {
     }
 
     public String gerarRecomendacao() {
-        String recomendacao = "Recomendação para o cliente " + cliente.getNome() + " (" + cliente.getEmail() + " - CPF: " + cliente.getCpf() + "):\n";
-        recomendacao += "Endereço: " + endereco.getCep() + ", " + endereco.getRua() + ", " + endereco.getBairro() + ", " + endereco.getCidade() + " - " + endereco.getComplemento() + "\n";
-        recomendacao += "Tipo de solo: " + solo.getTipo() + "\n";
-        recomendacao += "Cultura: " + solo.getCultura() + "\n";
-        recomendacao += "Temperatura média: " + clima.getTemperaturaMedia() + "°C\n";
-        recomendacao += "Condição climática: " + clima.getDescricao() + "\n";
-        recomendacao += "Fertilizante recomendado: " + fertilizante.getNome() + "\n";
-
-        return recomendacao;
+        // Inicializa a string de recomendação
+        StringBuilder recomendacao = new StringBuilder();
+        
+        // Verifica o tipo de solo e faz uma recomendação com base nisso
+        if (solo.getTipo().equalsIgnoreCase("Argiloso")) {
+            recomendacao.append("Recomenda-se realizar a adição de material orgânico para melhorar a estrutura do solo.\n");
+        } else if (solo.getTipo().equalsIgnoreCase("Arenoso")) {
+            recomendacao.append("Recomenda-se realizar a adição de matéria orgânica para aumentar a capacidade de retenção de água do solo.\n");
+        } else {
+            recomendacao.append("Recomenda-se realizar um Solo do Tipo Humifero para o seu plantio sendo considerado o mais indicado para o plantio.\n");
+        }
+        
+        // Verifica a temperatura média e a condição climática e faz uma recomendação com base nisso
+        if (clima.getTemperaturaMedia() < 20) {
+            recomendacao.append("Devido à temperatura mais baixa, é recomendado escolher culturas mais resistentes ao frio.\n");
+        } else if (clima.getTemperaturaMedia() > 30) {
+            recomendacao.append("Devido à temperatura mais alta, é recomendado escolher culturas mais resistentes ao calor.\n");
+        }
+        
+        // Adiciona mais recomendações com base nos dados do solo e clima, se necessário
+        
+        // Retorna a recomendação completa
+        return recomendacao.toString();
     }
-}
+   
+}    
