@@ -1,54 +1,41 @@
 package com.example.growertech.dto;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
 public class RecomendacaoDTO {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @NotBlank(message = "Nome do cliente é obrigatório")
-    private String nomeCliente;
-
-    @NotBlank(message = "CPF do cliente é obrigatório")
-    private String cpfCliente;
-
-    @NotBlank(message = "Email do cliente é obrigatório")
-    private String emailCliente;
-
-    @NotBlank(message = "CEP do endereço é obrigatório")
-    private String cepEndereco;
-
-    @NotBlank(message = "Rua do endereço é obrigatória")
-    private String ruaEndereco;
-
-    @NotBlank(message = "Cidade do endereço é obrigatória")
-    private String cidadeEndereco;
-
-    @NotBlank(message = "Bairro do endereço é obrigatório")
-    private String bairroEndereco;
-
-    @NotBlank(message = "Complemento do endereço é obrigatório")
-    private String complementoEndereco;
-
-    @NotBlank(message = "Tipo de solo é obrigatório")
+    @NotBlank(message = "O tipo de solo é obrigatório")
     private String tipoSolo;
 
-    @NotBlank(message = "Cultura do solo é obrigatória")
+    @NotBlank(message = "O clima é obrigatório")
+    private String clima;
+
+    @NotBlank(message = "A cultura é obrigatória")
     private String cultura;
 
-    @NotBlank(message = "Nome do fertilizante é obrigatório")
-    private String nomeFertilizante;
+    @NotBlank(message = "O fertilizante é obrigatório")
+    private String fertilizante;
 
-    @NotNull(message = "Temperatura média do clima é obrigatória")
-    private Integer temperaturaMediaClima;
+    @NotBlank(message = "A recomendação para o solo é obrigatória")
+    @Size(max = 255, message = "A recomendação para o solo deve ter no máximo 255 caracteres")
+    private String recomendacaoSolo;
 
-    @NotBlank(message = "Descrição do clima é obrigatória")
-    private String descricaoClima;
+    private int temperaturaMedia;
+
+    private String recomendacaoFertilizante;
+
+
+
+    public RecomendacaoDTO(String tipoSolo, String clima, String cultura, String fertilizante, String recomendacaoSolo, int temperaturaMedia, String recomendacaoFertilizante) {
+        this.tipoSolo = tipoSolo;
+        this.clima = clima;
+        this.cultura = cultura;
+        this.fertilizante = fertilizante;
+        this.recomendacaoSolo = recomendacaoSolo;
+        this.temperaturaMedia = temperaturaMedia;
+        this.recomendacaoFertilizante= recomendacaoFertilizante;
+
+    }
 }

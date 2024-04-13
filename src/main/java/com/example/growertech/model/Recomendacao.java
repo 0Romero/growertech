@@ -5,7 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
@@ -14,54 +15,40 @@ public class Recomendacao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
+    @NotBlank(message = "O tipo de solo é obrigatório")
+    private String tipoSolo;
+
+    @NotBlank(message = "O clima é obrigatório")
+    private String clima;
+
+    @NotBlank(message = "A cultura é obrigatória")
+    private String cultura;
+
+    @NotBlank(message = "O fertilizante é obrigatório")
+    private String fertilizante;
+
+    @NotBlank(message = "A recomendação para o solo é obrigatória")
+    @Size(max = 255, message = "A recomendação para o solo deve ter no máximo 255 caracteres")
+    private String recomendacaoSolo;
+
     @ManyToOne
-    private Cliente cliente; 
-    
-    @OneToOne
-    private Solo solo; 
-    
-    @OneToOne
-    private Fertilizante fertilizante;
-    
-    @OneToOne
-    private Endereco endereco;
-    
-    @OneToOne
-    private Clima clima; 
+    private Cliente cliente;
 
-    public Recomendacao(Cliente cliente, Solo solo, Fertilizante fertilizante, Endereco endereco, Clima clima) {
+    private int temperaturaMedia;
+
+    private String recomendacaoFertilizante;
+
+    // Adicione um construtor que corresponda aos parâmetros necessários
+    public Recomendacao(Cliente cliente, String tipoSolo, String clima, String cultura, String fertilizante, int temperaturaMedia, String recomendacaoSolo, String recomendacaoFertilizante) {
         this.cliente = cliente;
-        this.solo = solo; 
-        this.fertilizante = fertilizante;
-        this.endereco = endereco;
+        this.tipoSolo = tipoSolo;
         this.clima = clima;
+        this.cultura = cultura;
+        this.fertilizante = fertilizante;
+        this.temperaturaMedia = temperaturaMedia;
+        this.recomendacaoSolo = recomendacaoSolo;
+        this.recomendacaoFertilizante = recomendacaoFertilizante;
     }
 
-    public String gerarRecomendacao() {
-        // Inicializa a string de recomendação
-        StringBuilder recomendacao = new StringBuilder();
-        
-        // Verifica o tipo de solo e faz uma recomendação com base nisso
-        if (solo.getTipo().equalsIgnoreCase("Argiloso")) {
-            recomendacao.append("Recomenda-se realizar a adição de material orgânico para melhorar a estrutura do solo.\n");
-        } else if (solo.getTipo().equalsIgnoreCase("Arenoso")) {
-            recomendacao.append("Recomenda-se realizar a adição de matéria orgânica para aumentar a capacidade de retenção de água do solo.\n");
-        } else {
-            recomendacao.append("Recomenda-se realizar um Solo do Tipo Humifero para o seu plantio sendo considerado o mais indicado para o plantio.\n");
-        }
-        
-        // Verifica a temperatura média e a condição climática e faz uma recomendação com base nisso
-        if (clima.getTemperaturaMedia() < 20) {
-            recomendacao.append("Devido à temperatura mais baixa, é recomendado escolher culturas mais resistentes ao frio.\n");
-        } else if (clima.getTemperaturaMedia() > 30) {
-            recomendacao.append("Devido à temperatura mais alta, é recomendado escolher culturas mais resistentes ao calor.\n");
-        }
-        
-        // Adiciona mais recomendações com base nos dados do solo e clima, se necessário
-        
-        // Retorna a recomendação completa
-        return recomendacao.toString();
-    }
-   
-}    
+}

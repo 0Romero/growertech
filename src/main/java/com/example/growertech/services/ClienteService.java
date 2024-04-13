@@ -1,6 +1,7 @@
 package com.example.growertech.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,30 +15,29 @@ public class ClienteService {
     @Autowired
     private ClienteRepository clienteRepository;
 
-    public List<Cliente> listarClientes() {
-        return clienteRepository.findAll();
-    }
-
     public Cliente criarCliente(Cliente cliente) {
         return clienteRepository.save(cliente);
     }
 
-    public Cliente obterClientePorId(Long id) {
-        return clienteRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado"));
+    public List<Cliente> listarClientes() {
+        return clienteRepository.findAll();
     }
 
-    public Cliente atualizarCliente(Long id, Cliente cliente) {
-        cliente.setId(id);
-        return clienteRepository.save(cliente);
+    public Cliente buscarClientePorId(Long id) {
+        Optional<Cliente> cliente = clienteRepository.findById(id);
+        return cliente.orElse(null);
+    }
+
+    public Cliente atualizarCliente(Long id, Cliente novoCliente) {
+        Cliente cliente = buscarClientePorId(id);
+        if (cliente != null) {
+            novoCliente.setId(id);
+            return clienteRepository.save(novoCliente);
+        }
+        return null;
     }
 
     public void deletarCliente(Long id) {
         clienteRepository.deleteById(id);
-    }
-
-    public Cliente findByCpf(String cpf) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findByCpf'");
     }
 }

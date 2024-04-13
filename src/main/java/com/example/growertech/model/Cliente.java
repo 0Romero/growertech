@@ -1,11 +1,9 @@
 package com.example.growertech.model;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -18,24 +16,29 @@ public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @NotBlank(message = "O nome é obrigatório")
     private String nome;
-    
-    @NotBlank(message = "cpf Obrigatorio")
-    @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}", message = "{account.cpf.Patern}")
-    private String cpf;
-    
-    @Email(message = "O email deve ser válido")
-    @NotBlank(message = "O email é obrigatório")
-    private String email;
-    
-    @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL)
-    private Endereco endereco;
 
-    public Cliente(String nome, String cpf, String email) {
-        this.nome = nome;
-        this.cpf = cpf;
-        this.email = email;
-    }
+    @NotBlank(message = "O CPF é obrigatório")
+    @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}", message = "CPF inválido")
+    private String cpf;
+
+    @NotBlank(message = "O email é obrigatório")
+    @Email(message = "O email deve ser válido")
+    private String email;
+
+    @NotBlank(message = "O tipo de solo é obrigatório")
+    private String tipoSolo;
+
+    @NotBlank(message = "O clima é obrigatório")
+    private String clima;
+
+    @NotBlank(message = "A cultura é obrigatória")
+    private String cultura;
+
+    @NotBlank(message = "O fertilizante é obrigatório")
+    private String fertilizante;
+
+    private int temperaturaMedia;
 }
