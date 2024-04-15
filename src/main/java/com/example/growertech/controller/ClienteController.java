@@ -74,10 +74,15 @@ public class ClienteController {
     }
 
     // Endpoint para gerar recomendação para um cliente
-    @GetMapping("/{id}/recomendacao")
-    public ResponseEntity<RecomendacaoDTO> gerarRecomendacao(@PathVariable Long id) {
-        Recomendacao recomendacao = recomendacaoService.gerarRecomendacao(id);
+   @GetMapping("/{cpf}/recomendacao")
+    public ResponseEntity<RecomendacaoDTO> gerarRecomendacao(@PathVariable String cpf) {
+    // Implemente a lógica para encontrar o cliente pelo CPF
+    Cliente cliente = clienteService.buscarClientePorCpf(cpf);
+    if (cliente != null) {
+        // Se o cliente for encontrado, chame o serviço de recomendação
+        Recomendacao recomendacao = recomendacaoService.gerarRecomendacao(cliente.getId());
         if (recomendacao != null) {
+            // Se uma recomendação for gerada, mapeie-a para o DTO e retorne-a
             RecomendacaoDTO recomendacaoDTO = new RecomendacaoDTO(recomendacao.getTipoSolo(), recomendacao.getClima(),
                                                                  recomendacao.getCultura(), recomendacao.getFertilizante(),
                                                                  recomendacao.getRecomendacaoSolo(),
@@ -85,7 +90,12 @@ public class ClienteController {
                                                                  recomendacao.getRecomendacaoFertilizante());
             return ResponseEntity.ok(recomendacaoDTO);
         } else {
+            // Se nenhuma recomendação for gerada, retorne uma resposta notFound
             return ResponseEntity.notFound().build();
         }
+    } else {
+        // Se o cliente não for encontrado, retorne uma resposta notFound
+        return ResponseEntity.notFound().build();
     }
+}
 }
