@@ -40,8 +40,10 @@ public class ClienteService {
     public void deletarCliente(Long id) {
         clienteRepository.deleteById(id);
     }
-    public Cliente buscarClientePorCpf(String cpf) {
+    public Cliente findByCpf(String cpf) {
        
         return clienteRepository.findByCpf(cpf);
     }
+
+    
 }

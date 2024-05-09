@@ -1,0 +1,31 @@
+package com.example.growertech.model;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import lombok.Data;
+
+@Data
+@Entity
+public class Endereco {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @NotBlank
+    private String rua;
+    @NotBlank
+    private String bairro;
+    @NotBlank
+    private String complemento;
+    @NotBlank
+    private String cep;
+    @Positive
+    private Integer numero;
+    @NotBlank
+    private String cidade;
+    @NotBlank
+    private String uf;
+}

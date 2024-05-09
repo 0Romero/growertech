@@ -16,16 +16,16 @@ public class Recomendacao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "O tipo de solo é obrigatório")
+    @NotBlank(message = "{cliente.tiposolo.notblank}")
     private String tipoSolo;
 
-    @NotBlank(message = "O clima é obrigatório")
+    @NotBlank(message = "{cliente.clima.notblank}")
     private String clima;
 
-    @NotBlank(message = "A cultura é obrigatória")
+    @NotBlank(message = "{cliente.cultura.notblank}")
     private String cultura;
 
-    @NotBlank(message = "O fertilizante é obrigatório")
+    @NotBlank(message = "{cliente.fertilizante.notblank}")
     private String fertilizante;
 
     @NotBlank(message = "A recomendação para o solo é obrigatória")

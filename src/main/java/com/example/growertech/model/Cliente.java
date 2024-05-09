@@ -1,44 +1,68 @@
 package com.example.growertech.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.RepresentationModel;
+
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import lombok.Data;
+import java.util.ArrayList;
+import java.util.List;
 
-
-@Data
 @Entity
-public class Cliente {
+@Data
+@EqualsAndHashCode(callSuper = false)
+public class Cliente extends RepresentationModel<Cliente> {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "O nome é obrigatório")
+    @NotBlank(message = "{cliente.nome.notblank}")
     private String nome;
 
-    @NotBlank(message = "O CPF é obrigatório")
-    @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}", message = "CPF inválido")
+    @NotBlank(message = "{cliente.cpf.notblank}")
+    @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}", message = "{cliente.cpf.pattern}")
     private String cpf;
 
-    @NotBlank(message = "O email é obrigatório")
-    @Email(message = "O email deve ser válido")
+    @NotBlank(message = "{cliente.email.notblank}")
+    @Email(message = "{cliente.email.email}")
     private String email;
 
-    @NotBlank(message = "O tipo de solo é obrigatório")
+    @NotBlank(message = "{cliente.tiposolo.notblank}")
     private String tipoSolo;
 
-    @NotBlank(message = "O clima é obrigatório")
+    @NotBlank(message = "{cliente.clima.notblank}")
     private String clima;
 
-    @NotBlank(message = "A cultura é obrigatória")
+    @NotBlank(message = "{cliente.cultura.notblank}")
     private String cultura;
 
-    @NotBlank(message = "O fertilizante é obrigatório")
+    @NotBlank(message = "{cliente.fertilizante.notblank}")
     private String fertilizante;
 
-    private int temperaturaMedia;
+    @NotNull(message = "{cliente.temperaturamedia.notnull}")
+    private Integer temperaturaMedia;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Endereco endereco;
+
+    // Lista de links do HATEOAS
+    @Transient // Para evitar persistência no banco de dados
+    private List<Link> customLinks = new ArrayList<>();
+
+    // Método para adicionar um link personalizado
+    public void addCustomLink(Link link) {
+        customLinks.add(link);
+    }
+
+    // Método personalizado para obter os links personalizados
+    public List<Link> getCustomLinks() {
+        return customLinks;
+    }
 }
