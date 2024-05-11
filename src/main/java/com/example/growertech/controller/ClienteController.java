@@ -37,6 +37,7 @@ public class ClienteController {
     private final ClienteService clienteService;
     private final RecomendacaoService recomendacaoService;
 
+
     public ClienteController(ClienteService clienteService, RecomendacaoService recomendacaoService) {
         this.clienteService = clienteService;
         this.recomendacaoService = recomendacaoService;
@@ -52,21 +53,21 @@ public class ClienteController {
     }
 
     @ApiOperation("Criar um novo cliente")
-    @PostMapping("/cadastroCliente")
+    @PostMapping
     public ResponseEntity<Cliente> criarCliente(@Valid @RequestBody Cliente cliente) {
         Cliente novoCliente = clienteService.criarCliente(cliente);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoCliente);
     }
 
     @ApiOperation("Listar todos os clientes")
-    @GetMapping("/buscarClientes")
+    @GetMapping
     public ResponseEntity<List<Cliente>> listarClientes() {
         List<Cliente> clientes = clienteService.listarClientes();
         return ResponseEntity.ok(clientes);
     }
 
     @ApiOperation("Buscar cliente por ID")
-    @GetMapping("/serachId/{id}")
+    @GetMapping("/searchId/{id}")
     public ResponseEntity<Cliente> buscarClientePorId(@PathVariable Long id) {
         Cliente cliente = clienteService.buscarClientePorId(id);
         return cliente != null ? ResponseEntity.ok(cliente) : ResponseEntity.notFound().build();
@@ -95,15 +96,20 @@ public class ClienteController {
 
     @ApiOperation("Cadastrar endereço para cliente")
     @PostMapping("/enderecoCpf/{cpf}/cadastroEndereco")
-    public ResponseEntity<Cliente> cadastrarEndereco(@PathVariable String cpf, @Valid @RequestBody Endereco endereco) {
+    public ResponseEntity<?> cadastrarEndereco(@PathVariable String cpf, @Valid @RequestBody Endereco endereco) {
         Cliente cliente = clienteService.findByCpf(cpf);
         if (cliente != null) {
+            if (cliente.getEndereco() != null) {
+                return ResponseEntity.badRequest().body("O cliente já possui um endereço cadastrado.");
+            }
             cliente.setEndereco(endereco);
             Cliente clienteComEndereco = clienteService.atualizarCliente(cliente.getId(), cliente);
             return ResponseEntity.ok(clienteComEndereco);
+        } else {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
     }
+
 
     @ApiOperation("Obter endereço do cliente")
     @GetMapping("/enderecocpf/{cpf}/buscarEndereco")
