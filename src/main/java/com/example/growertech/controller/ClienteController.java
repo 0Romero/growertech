@@ -24,7 +24,6 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import com.example.growertech.dto.RecomendacaoDTO;
 import com.example.growertech.model.Cliente;
 import com.example.growertech.model.Endereco;
-import com.example.growertech.model.Recomendacao;
 import com.example.growertech.services.ClienteService;
 import com.example.growertech.services.RecomendacaoService;
 
@@ -144,28 +143,24 @@ public class ClienteController {
         }
     }
 
-    @Operation(summary="Gerar recomendação para o cliente")
+   
+    @Operation(summary = "Gerar recomendação para o cliente")
     @GetMapping("cpf/{cpf}/gerarRecomendacao")
     public ResponseEntity<?> gerarRecomendacao(@PathVariable String cpf) {
         try {
             Cliente cliente = clienteService.findByCpf(cpf);
             if (cliente != null && cliente.getEndereco() != null) {
-                Recomendacao recomendacao = recomendacaoService.gerarRecomendacao(cliente.getId());
-                if (recomendacao != null) {
-                    RecomendacaoDTO recomendacaoDTO = new RecomendacaoDTO(recomendacao.getTipoSolo(), recomendacao.getClima(),
-                            recomendacao.getCultura(), recomendacao.getFertilizante(), recomendacao.getRecomendacaoSolo(),
-                            recomendacao.getTemperaturaMedia(), recomendacao.getRecomendacaoFertilizante());
-
-                    // Adicionar os links necessários
+                RecomendacaoDTO recomendacaoDTO = recomendacaoService.gerarRecomendacao(cliente.getId());
+                if (recomendacaoDTO != null) {
+                    // Adicionar link para o cliente
                     Link clienteLink = WebMvcLinkBuilder.linkTo(ClienteController.class).slash("cpf").slash(cpf).withRel("cliente");
                     recomendacaoDTO.add(clienteLink);
 
-                    // Adicionar mais links personalizados conforme necessário
-                    // Exemplo:
-                    // Link recomendarNovamenteLink = WebMvcLinkBuilder.linkTo(ClienteController.class).slash("cpf").slash(cpf).slash("gerarRecomendacao").withRel("recomendar-novamente");
-                    // recomendacaoDTO.add(recomendarNovamenteLink);
+                    // Adicionar link para a própria recomendação
+                    Link selfLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ClienteController.class).gerarRecomendacao(cpf)).withSelfRel();
+                    recomendacaoDTO.add(selfLink);
 
-                    // Retornar o DTO de recomendação com status OK
+                    // Retornar a recomendação no corpo da resposta
                     return ResponseEntity.ok(recomendacaoDTO);
                 } else {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao gerar recomendação.");
@@ -174,11 +169,9 @@ public class ClienteController {
                 return ResponseEntity.notFound().build();
             }
         } catch (Exception ex) {
-            // Lidar com exceções de forma mais específica aqui, se necessário
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar a solicitação.");
         }
     }
-
     
     // Método para adicionar links aos clientes
     private void addLinks(Cliente cliente) {

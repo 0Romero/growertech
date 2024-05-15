@@ -3,17 +3,17 @@ package com.example.growertech.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.growertech.dto.RecomendacaoDTO;
 import com.example.growertech.model.Cliente;
-import com.example.growertech.model.Recomendacao;
 @Service
 public class RecomendacaoService {
 
     @Autowired
     private ClienteService clienteService;
 
-    public Recomendacao gerarRecomendacao(Long clienteId) {
+    public RecomendacaoDTO gerarRecomendacao(Long clienteId) {
         Cliente cliente = clienteService.buscarClientePorId(clienteId);
-        if (cliente != null) {
+        if (cliente != null && cliente.getEndereco() != null) {
             String tipoSolo = cliente.getTipoSolo();
             String clima = cliente.getClima();
             String cultura = cliente.getCultura();
@@ -54,8 +54,8 @@ public class RecomendacaoService {
                 recomendacaoFertilizante = "Utilize fertilizantes com maior teor de nitrogênio para estimular o crescimento das plantas.";
             }
 
-            // Criar e retornar a recomendação
-            return new Recomendacao(cliente, tipoSolo, clima, cultura, fertilizante, temperaturaMedia, recomendacaoSolo, recomendacaoFertilizante);
+            // Criar e retornar o DTO de recomendação
+            return new RecomendacaoDTO(tipoSolo, clima, cultura, fertilizante, recomendacaoSolo, temperaturaMedia, recomendacaoFertilizante);
         } else {
             return null; // Ou lançar uma exceção, dependendo dos requisitos do seu aplicativo
         }
