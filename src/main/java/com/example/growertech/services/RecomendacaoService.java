@@ -1,10 +1,15 @@
 package com.example.growertech.services;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 
+import com.example.growertech.controller.ClienteController;
 import com.example.growertech.dto.RecomendacaoDTO;
 import com.example.growertech.model.Cliente;
+
 @Service
 public class RecomendacaoService {
 
@@ -22,6 +27,7 @@ public class RecomendacaoService {
             String recomendacaoSolo = "";
             String recomendacaoFertilizante = "";
             
+            // Lógica para gerar a recomendação
             switch (tipoSolo) {
                 case "Argiloso":
                     recomendacaoSolo = "Use fertilizantes ricos em potássio para melhorar a fertilidade do solo.";
@@ -54,8 +60,16 @@ public class RecomendacaoService {
                 recomendacaoFertilizante = "Utilize fertilizantes com maior teor de nitrogênio para estimular o crescimento das plantas.";
             }
 
-            // Criar e retornar o DTO de recomendação
-            return new RecomendacaoDTO(tipoSolo, clima, cultura, fertilizante, recomendacaoSolo, temperaturaMedia, recomendacaoFertilizante);
+            // Criar DTO de recomendação com as informações
+            RecomendacaoDTO recomendacaoDTO = new RecomendacaoDTO(tipoSolo, clima, cultura, fertilizante, recomendacaoSolo, temperaturaMedia, recomendacaoFertilizante);
+            
+            // Adicionar link ao DTO de recomendação
+            String clienteIdString = clienteId.toString();
+            Link link = WebMvcLinkBuilder.linkTo(methodOn(ClienteController.class).gerarRecomendacao(clienteIdString))
+                .withRel("gerarRecomendacao");
+            recomendacaoDTO.add(link);
+
+            return recomendacaoDTO;
         } else {
             return null; // Ou lançar uma exceção, dependendo dos requisitos do seu aplicativo
         }

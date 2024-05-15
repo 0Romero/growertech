@@ -1,8 +1,12 @@
 package com.example.growertech.controller;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -17,9 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 
 import com.example.growertech.dto.RecomendacaoDTO;
 import com.example.growertech.model.Cliente;
@@ -147,27 +148,24 @@ public class ClienteController {
     @Operation(summary = "Gerar recomendação para o cliente")
     @GetMapping("cpf/{cpf}/gerarRecomendacao")
     public ResponseEntity<?> gerarRecomendacao(@PathVariable String cpf) {
+        Cliente cliente = clienteService.findByCpf(cpf);
+        if (cliente == null || cliente.getEndereco() == null) {
+            return ResponseEntity.notFound().build();
+        }
+        
         try {
-            Cliente cliente = clienteService.findByCpf(cpf);
-            if (cliente != null && cliente.getEndereco() != null) {
-                RecomendacaoDTO recomendacaoDTO = recomendacaoService.gerarRecomendacao(cliente.getId());
-                if (recomendacaoDTO != null) {
-                    // Adicionar link para o cliente
-                    Link clienteLink = WebMvcLinkBuilder.linkTo(ClienteController.class).slash("cpf").slash(cpf).withRel("cliente");
-                    recomendacaoDTO.add(clienteLink);
-
-                    // Adicionar link para a própria recomendação
-                    Link selfLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ClienteController.class).gerarRecomendacao(cpf)).withSelfRel();
-                    recomendacaoDTO.add(selfLink);
-
-                    // Retornar a recomendação no corpo da resposta
-                    return ResponseEntity.ok(recomendacaoDTO);
-                } else {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao gerar recomendação.");
-                }
-            } else {
-                return ResponseEntity.notFound().build();
+            RecomendacaoDTO recomendacaoDTO = recomendacaoService.gerarRecomendacao(cliente.getId());
+            if (recomendacaoDTO == null) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao gerar recomendação.");
             }
+
+            // Criar um objeto que contenha tanto o cliente quanto a recomendação
+            Map<String, Object> response = new HashMap<>();
+            response.put("cliente", cliente);
+            response.put("recomendacao", recomendacaoDTO);
+
+            // Retornar a resposta no corpo da resposta
+            return ResponseEntity.ok(response);
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar a solicitação.");
         }
