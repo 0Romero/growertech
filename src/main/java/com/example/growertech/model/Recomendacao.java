@@ -35,6 +35,7 @@ public class Recomendacao {
     @ManyToOne
     private Cliente cliente;
 
+    
     private int temperaturaMedia;
 
     private String recomendacaoFertilizante;
@@ -50,5 +51,5 @@ public class Recomendacao {
         this.recomendacaoSolo = recomendacaoSolo;
         this.recomendacaoFertilizante = recomendacaoFertilizante;
     }
-
+    
 }

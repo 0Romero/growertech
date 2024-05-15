@@ -1,11 +1,15 @@
 package com.example.growertech.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
 
-@Data
-public class RecomendacaoDTO {
+
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.RepresentationModel;
+
+
+public class RecomendacaoDTO extends RepresentationModel<RecomendacaoDTO> {
     @NotBlank(message = "{cliente.tiposolo.notblank}")
     private String tipoSolo;
 
@@ -22,8 +26,10 @@ public class RecomendacaoDTO {
     @Size(max = 255, message = "A recomendação para o solo deve ter no máximo 255 caracteres")
     private String recomendacaoSolo;
 
+    @Positive
     private int temperaturaMedia;
 
+    @NotBlank
     private String recomendacaoFertilizante;
 
 
@@ -38,4 +44,8 @@ public class RecomendacaoDTO {
         this.recomendacaoFertilizante= recomendacaoFertilizante;
 
     }
+    public void addLink(Link link) {
+        super.add(link);
+    }
 }
+
