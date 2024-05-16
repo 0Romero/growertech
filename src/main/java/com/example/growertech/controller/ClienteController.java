@@ -150,9 +150,9 @@ public class ClienteController {
     public ResponseEntity<?> gerarRecomendacao(@PathVariable String cpf) {
         Cliente cliente = clienteService.findByCpf(cpf);
         if (cliente == null || cliente.getEndereco() == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Por Favor Insira Todos os Dados Pedidos....");
         }
-        
+
         try {
             RecomendacaoDTO recomendacaoDTO = recomendacaoService.gerarRecomendacao(cliente.getId());
             if (recomendacaoDTO == null) {
@@ -170,6 +170,8 @@ public class ClienteController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar a solicitação.");
         }
     }
+
+    
     
     // Método para adicionar links aos clientes
     private void addLinks(Cliente cliente) {

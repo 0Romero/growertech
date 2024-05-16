@@ -15,19 +15,19 @@ public class Endereco {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank
+    @NotBlank(message = "{endereco.rua.notblank}")
     private String rua;
-    @NotBlank
+    @NotBlank(message = "{endereco.bairro.notblank}")
     private String bairro;
-    @NotBlank
+    @NotBlank(message = "{endereco.complemento.notblank}")
     private String complemento;
-    @NotBlank
+    @NotBlank(message = "{endereco.cep.notblank}")
     private String cep;
-    @Positive
+    @Positive(message = "{endereco.numero.positive}")
     private Integer numero;
-    @NotBlank
+    @NotBlank(message = "{endereco.cidade.notblank}")
     private String cidade;
-    @NotBlank
+    @NotBlank(message = "{endereco.uf.notblank}")
     private String uf;
 
     
