@@ -17,16 +17,21 @@ public class Endereco {
     private Long id;
     @NotBlank(message = "{endereco.rua.notblank}")
     private String rua;
+
     @NotBlank(message = "{endereco.bairro.notblank}")
     private String bairro;
-    @NotBlank(message = "{endereco.complemento.notblank}")
+    
     private String complemento;
+
     @NotBlank(message = "{endereco.cep.notblank}")
     private String cep;
+
     @Positive(message = "{endereco.numero.positive}")
     private Integer numero;
+
     @NotBlank(message = "{endereco.cidade.notblank}")
     private String cidade;
+    
     @NotBlank(message = "{endereco.uf.notblank}")
     private String uf;
 
